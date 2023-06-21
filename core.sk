@@ -370,3 +370,5 @@ on every 10 minutes:
 command /srl [<text>]:
     trigger:
         make executor execute "/skript reload ./minecraft-rpg/%arg-1%"
+
+        # xd
