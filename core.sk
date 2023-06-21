@@ -12,6 +12,9 @@ Variables:
     {game.mechanic.player.sleepy::%player%} = 0
     {game.mechanic.player.happycooldown::%player%} = true
 
+options:
+    prefix: &cSystem
+
 on load:
     set {Coreloaded} to "&aloaded"
     if {Coreloaded} and {chestsloaded} are "&aloaded":
@@ -41,7 +44,6 @@ on load:
         send "&fCreated by Matty" to console    
         send "-----------------------------------------------" to console   
 
-
 on player join:
     if {player.firstjoinstatus::%player%} is false:
         set {player.firstjoinstatus::%player%} to true
@@ -50,7 +52,7 @@ on player join:
         set {player.economy.mainmoney::%player%} to 0
         set tab list name of player to "&7[&8Tulak&7] &f%player%&f"
         wait 5 ticks
-        send "&cSystem &7>> &fNyni jsi &7[&8Tulak&7] &f!" to player
+        send "{@prefix} &7>> &fNyni jsi &7[&8Tulak&7] &f!" to player
         stop
     if {player.firstjoinstatus::%player%} is true:
         if {player.class.curretclass::%player%} is "&8Tulak":
