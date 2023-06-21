@@ -1,0 +1,369 @@
+#Codes: 
+#Set {player.firstjoinstatus::%player%} to false (Set first player join) = FJSCT01
+
+Variables:
+    {player.firstjoinstatus::%player%} = false
+    {player.economy.mainmoney::%player%} = 0
+    {chestsloaded} = "&cERROR"
+    {Castlesloaded} = "&cERROR"
+    {Coreloaded} = "&cERROR"
+    {RPGversion} = "&cDev. 0.1"
+    {game.mechanic.player.happy::%player%} = 100
+    {game.mechanic.player.sleepy::%player%} = 0
+    {game.mechanic.player.happycooldown::%player%} = true
+
+on load:
+    set {Coreloaded} to "&aloaded"
+    if {Coreloaded} and {chestsloaded} are "&aloaded":
+        send "-----------------------------------------------" to console
+        send "" to console
+        send "&aAll RPG systems loaded properly!" to console
+        send "" to console
+        send "&fRPG Core: %{Coreloaded}%" to console
+        send "&fChests system: %{chestsloaded}%" to console
+        send "&fCastles: %{Castlesloaded}%" to console
+        send "" to console
+        send "&eVersion: &c%{RPGversion}% &f(9.6.2023)" to console
+        send "" to console
+        send "&fCreated by Matty" to console
+        send "-----------------------------------------------" to console
+    if {Coreloaded} or {chestsloaded} are "&cERROR":
+        send "-----------------------------------------------" to console
+        send "" to console
+        send "&cNot all scripts loaded properly!" to console
+        send "" to console
+        send "&fRPG Core: %{Coreloaded}%" to console
+        send "&fChests system: %{chestsloaded}%" to console
+        send "&fCastles: %{Castlesloaded}%" to console
+        send "" to console
+        send "&eVersion: &c%{RPGversion}% &f(9.6.2023)" to console
+        send "" to console
+        send "&fCreated by Matty" to console    
+        send "-----------------------------------------------" to console   
+
+
+on player join:
+    if {player.firstjoinstatus::%player%} is false:
+        set {player.firstjoinstatus::%player%} to true
+        set {player.class.curretclass::%player%} to "&8Tulak"
+        set {playersclass.tulak::%player%} to true
+        set {player.economy.mainmoney::%player%} to 0
+        set tab list name of player to "&7[&8Tulak&7] &f%player%&f"
+        wait 5 ticks
+        send "&cSystem &7>> &fNyni jsi &7[&8Tulak&7] &f!" to player
+        stop
+    if {player.firstjoinstatus::%player%} is true:
+        if {player.class.curretclass::%player%} is "&8Tulak":
+            set tab list name of player to "&7[%{player.class.curretclass::%player%}%&7] &f%player's name%"
+        stop
+
+on chat:
+    if {playersclass.tulak::%player%} is true:
+        set the chat format to "&7[&8Tulak&7] &f%player's display name%&7: &f%Colored message%"
+
+command /FJSCT01:
+    trigger:
+        set {player.firstjoinstatus::%player%} to false
+
+on first join:
+    set join message to "&7[&a+&7] &f%player%"
+    if {player.economy.mainmoney::%player%} = 0:
+        set {player.economy.mainmoney.color::%player%} to "&7"
+
+on join:
+    player has played before
+    set {game.mechanic.player.happycooldown::%player%} to false
+    set join message to "&7[&a+&7] &f%player%"
+    if {player.economy.mainmoney::%player%} < -1:
+        set {player.economy.mainmoney.color::%player%} to "&4" 
+        stop
+    if {player.economy.mainmoney::%player%} = 0:
+        set {player.economy.mainmoney.color::%player%} to "&7"
+        stop
+    if {player.economy.mainmoney::%player%} <= 49:
+        set {player.economy.mainmoney.color::%player%} to "&c"
+        stop
+    if {player.economy.mainmoney::%player%} >= 50:
+        set {player.economy.mainmoney.color::%player%} to "&c"
+        stop
+    if {player.economy.mainmoney::%player%} >= 100:
+        set {player.economy.mainmoney.color::%player%} to "&6"
+        stop
+    if {player.economy.mainmoney::%player%} >= 500:
+        set {player.economy.mainmoney.color::%player%} to "&e"
+        stop
+    if {player.economy.mainmoney::%player%} >= 1000:
+        set {player.economy.mainmoney.color::%player%} to "&2"
+        stop
+    if {player.economy.mainmoney::%player%} >= 10000:
+        set {player.economy.mainmoney.color::%player%} to "&a"
+        stop
+    if {player.economy.mainmoney::%player%} >= 50000:
+        set {player.economy.mainmoney.color::%player%} to "&a&l"
+        stop
+
+on quit:
+	set quit message to "&7[&c-&7] &f%player%"
+
+on death:
+    if victim is a player:
+        set the death message to "&cSystem &7>> &7%victim% &fdie &c:["  
+
+
+
+#Economy Core
+command /money:
+    aliases: penize
+    trigger:
+        if {player.economy.mainmoney::%player%} < 0:
+            set {player.economy.mainmoney.color::%player%} to "&4"
+            send "&cSystem &7>> &fJsi v minusu, musis nejdriv zaplatit poplatky. Do te doby nemuzes obchodovat! Zustatek: %{player.economy.mainmoney.color::%player%}%%{player.economy.mainmoney::%player%}% &fgrosu." to player 
+            stop
+        if {player.economy.mainmoney::%player%} = 1:
+            send "&cSystem &7>> &fV kapse si nasel %{player.economy.mainmoney.color::%player%}%%{player.economy.mainmoney::%player%}% &fgros." to player 
+            stop
+        if {player.economy.mainmoney::%player%} = 2 or 3 or 4:
+            send "&cSystem &7>> &fV kapse si nasel %{player.economy.mainmoney.color::%player%}%%{player.economy.mainmoney::%player%}% &fgrose." to player 
+            stop
+        if {player.economy.mainmoney::%player%} >= 50000:
+            set {player.economy.mainmoney.color::%player%} to "&a&l"
+            send "&cSystem &7>> &fV kapse si nasel %{player.economy.mainmoney.color::%player%}%%{player.economy.mainmoney::%player%}% &fgrosu." to player 
+            stop
+        if {player.economy.mainmoney::%player%} >= 10000:
+            set {player.economy.mainmoney.color::%player%} to "&a"
+            send "&cSystem &7>> &fV kapse si nasel %{player.economy.mainmoney.color::%player%}%%{player.economy.mainmoney::%player%}% &fgrosu." to player 
+            stop
+        if {player.economy.mainmoney::%player%} >= 1000:
+            set {player.economy.mainmoney.color::%player%} to "&2"
+            send "&cSystem &7>> &fV kapse si nasel %{player.economy.mainmoney.color::%player%}%%{player.economy.mainmoney::%player%}% &fgrosu." to player 
+            stop
+        if {player.economy.mainmoney::%player%} >= 500:
+            set {player.economy.mainmoney.color::%player%} to "&e"
+            send "&cSystem &7>> &fV kapse si nasel %{player.economy.mainmoney.color::%player%}%%{player.economy.mainmoney::%player%}% &fgrosu." to player 
+            stop
+        if {player.economy.mainmoney::%player%} >= 100:
+            set {player.economy.mainmoney.color::%player%} to "&6"
+            send "&cSystem &7>> &fV kapse si nasel %{player.economy.mainmoney.color::%player%}%%{player.economy.mainmoney::%player%}% &fgrosu." to player 
+            stop
+        if {player.economy.mainmoney::%player%} >= 50:
+            set {player.economy.mainmoney.color::%player%} to "&c"
+            send "&cSystem &7>> &fV kapse si nasel %{player.economy.mainmoney.color::%player%}%%{player.economy.mainmoney::%player%}% &fgrosu." to player 
+            stop
+        if {player.economy.mainmoney::%player%} <= 49:
+            set {player.economy.mainmoney.color::%player%} to "&c"
+            send "&cSystem &7>> &fV kapse si nasel %{player.economy.mainmoney.color::%player%}%%{player.economy.mainmoney::%player%}% &fgrosu." to player 
+            stop
+        if {player.economy.mainmoney::%player%} = 0:
+            set {player.economy.mainmoney.color::%player%} to "&7"
+            send "&cSystem &7>> &fV kapse si nasel %{player.economy.mainmoney.color::%player%}%%{player.economy.mainmoney::%player%}% &fgrosu." to player 
+            stop
+
+
+
+on right-click:
+    if event-item is flower pot:
+        if name of event-item is "&6Mesec s penezi hrace &f%player's name% &7(&aRight-click&7)":
+            if {player.economy.mainmoney::%player%} < 0:
+                set {player.economy.mainmoney.color::%player%} to "&4"
+            if {player.economy.mainmoney::%player%} = 0:
+                set {player.economy.mainmoney.color::%player%} to "&7"
+            if {player.economy.mainmoney::%player%} <= 49:
+                set {player.economy.mainmoney.color::%player%} to "&c"
+            if {player.economy.mainmoney::%player%} >= 50: 
+                set {player.economy.mainmoney.color::%player%} to "&c"
+            if {player.economy.mainmoney::%player%} >= 100:
+                set {player.economy.mainmoney.color::%player%} to "&6"
+            if {player.economy.mainmoney::%player%} >= 500:
+                set {player.economy.mainmoney.color::%player%} to "&e"
+            if {player.economy.mainmoney::%player%} >= 1000: 
+                set {player.economy.mainmoney.color::%player%} to "&2"
+            if {player.economy.mainmoney::%player%} >= 10000: 
+                set {player.economy.mainmoney.color::%player%} to "&a"
+            if {player.economy.mainmoney::%player%} >= 50000: 
+                set {player.economy.mainmoney.color::%player%} to "&a&l"
+            set {amount} to tag "custom;money" of nbt compound of player's tool
+            add {amount} to {player.economy.mainmoney::%player%}
+            send "&cSystem &7>> &fNasel si svoje ztracene penize! &a%{amount}% grosu&f!" to player
+            send "             &fMomentalne v kapse mas: %{player.economy.mainmoney.color::%player%}%%{player.economy.mainmoney::%player%}%&f." to player
+            send title "&a+ &f%{amount}% &fgrosu" to player for 3 seconds
+            remove 1 from item amount of event-item
+        else:
+            if {player.economy.mainmoney::%player%} < 0:
+                set {player.economy.mainmoney.color::%player%} to "&4"
+            if {player.economy.mainmoney::%player%} = 0:
+                set {player.economy.mainmoney.color::%player%} to "&7"
+            if {player.economy.mainmoney::%player%} <= 49:
+                set {player.economy.mainmoney.color::%player%} to "&c"
+            if {player.economy.mainmoney::%player%} >= 50: 
+                set {player.economy.mainmoney.color::%player%} to "&c"
+            if {player.economy.mainmoney::%player%} >= 100:
+                set {player.economy.mainmoney.color::%player%} to "&6"
+            if {player.economy.mainmoney::%player%} >= 500:
+                set {player.economy.mainmoney.color::%player%} to "&e"
+            if {player.economy.mainmoney::%player%} >= 1000: 
+                set {player.economy.mainmoney.color::%player%} to "&2"
+            if {player.economy.mainmoney::%player%} >= 10000: 
+                set {player.economy.mainmoney.color::%player%} to "&a"
+            if {player.economy.mainmoney::%player%} >= 50000: 
+                set {player.economy.mainmoney.color::%player%} to "&a&l"
+            play "ENTITY_PLAYER_LEVELUP" to player at volume 3
+            set {amount} to tag "custom;money" of nbt compound of player's tool
+            add {amount} to {player.economy.mainmoney::%player%}
+            send title "&a+ &f%{amount}% &fgrosu" to player for 3 seconds
+            send "&cSystem &7>> &fOtevrel si sacek a v nem se ukryvalo &a%{amount}% grosu&f!"
+            send "             &fMomentalne v kapse mas: %{player.economy.mainmoney.color::%player%}%%{player.economy.mainmoney::%player%}%&f." to player 
+            remove 1 from item amount of event-item
+    stop
+
+on death:
+    if attacker is a player:
+        log "Death: %attacker% killed %victim%" to "/Game/Players/%victim%/Deaths"
+    else if victim is a player:
+        log "%victim% die" to "/Game/Players/%victim%/Deaths"
+    if victim is a player:
+        if {player.economy.mainmoney::%victim%} > 0:
+            set {_itemdata.flowerpot} to flower pot named "&6Mesec s penezi hrace &f%victim% &7(&aRight-click&7)"
+            set {game.mechanic.victimname::%victim%} to victim's name
+            set {Game.itemdata.economy.mainmoney::%victim%} to {player.economy.mainmoney::%victim%}
+            set {player.economy.mainmoney::%victim%} to 0
+            drop {_itemdata.flowerpot} at victim's location
+            set tag "Item;tag;custom;money" of nbt of last dropped item to {Game.itemdata.economy.mainmoney::%victim%}
+            stop
+        else:
+            stop
+
+command /rpg [<text>] [<text>]:
+    trigger:
+        if arg-1 is set:
+            if arg-1 is "create" or "vytvorit":
+                if arg-2 is set:
+                    if arg-2 is "Hrad" or "zamek" or "castle":
+                        if {player.economy.mainmoney::%player%} >= 15000:
+                            stop
+                        if {player.economy.mainmoney::%player%} < 15000:
+                            set {game.mechanic.Castleneededmoney::%player%} to 15000 - {player.economy.mainmoney::%player%}
+                            if {game.mechanic.player.happycooldown::%player%} is false:
+                                remove 1 from {game.mechanic.player.happy::%player%}
+                                play "BLOCK_ANVIL_LAND" to player at volume 3
+                                set {game.mechanic.player.happycooldown::%player%} to true
+                                send title "&c-1 &fmoralka" for 3 seconds
+                            send ""
+                            send "          &fBohuzel nemas dostatek penez na zalozeni hradu."
+                            send ""
+                            send "   Pro zalozeni hradu je potreba &a15000 &fgrosu. &7(&fZbyva &6%{game.mechanic.Castleneededmoney::%player%}%&7)"
+                            send ""
+                            send "                          &fNyni mas %{player.economy.mainmoney.color::%player%}%%{player.economy.mainmoney::%player%}% &fgrosu."
+                            send ""
+                            stop
+                if arg-2 isn't set:
+                    send "&cSystem &7>> &f/rpg <create/vytvorit> <hrad/zamek/castle>"
+                    stop
+        if arg-1 and arg-2 isn't set:
+            send "&cSystem &7>> &f/rpg <create/vytvorit> <hrad/zamek/castle>"
+            stop
+  
+command /admin [<text>] [<text>] [<players>] [<number>]:
+    trigger:
+        if arg-1 is set:
+            if arg 1 is "create" or "give" or "vytvorit" or "pridat":
+                if arg 2 is set:
+                    if arg-2 is "paklic" or "lockpick":
+                        if arg-3 is set:
+                            if arg-3 is player:
+                                give 1 tripwire hook named "&cPaklic" with lore "%nl%&fNelegalni univerzalni klic, ktery %nl%&fdokaze vylamovat zamky jinych truhel. %nl%%nl%&fStatus: &cNelegalni" to arg-3
+                                stop
+                        if arg-3 isn't set:
+                            give 1 tripwire hook named "&cPaklic" with lore "%nl%&fNelegalni univerzalni klic, ktery %nl%&fdokaze vylamovat zamky jinych truhel. %nl%%nl%&fStatus: &cNelegalni" to player
+                            stop
+                    if arg-2 is "chest" or "bedna" or "locker" or "truhla":
+                        if arg-3 isn't set:
+                            if arg-4 isn't set:
+                                give 1 chest named "&fTruhla &7(&5%player%&7)" with lore "%nl%&fSlouzi pro uschovani cennosti a ostatnich veci, %nl%&fje opratrena lehkym zamkem pro zakladni ochranu. %nl%%nl%&fZabezpeceni: &aNizke &7(&fZakladni&7)"  to player
+                                stop
+            if arg 1 is "restart" or "reload":
+                if arg-2 is set:
+                    if arg-2 is "system":
+                        execute console command "/sk reload scripts"
+                        send "&cSystem &7>> &eRestarting..."
+                        wait 2 second
+                        send "&cSystem &7>> &fSuccessfully restarted, see LOG in console!"
+                        stop
+            if arg-1 is "money" or "penize":
+                if arg-2 is set:
+                    if arg-2 is "add" or "pridat":
+                        if arg-3 is set: 
+                            if arg-3 is set:
+                                if arg-4 is set:
+                                    if arg-4 is number:
+                                        add arg-4 to {player.economy.mainmoney::%arg-3%}
+                                        send "&cSystem &7>> &fUspesne si podvodem pridal &a%arg-4% grosu&f hraci &7%arg-3's displayname%&f." to player
+                                        if {player.economy.mainmoney::%player%} < 0:
+                                            set {player.economy.mainmoney.color::%player%} to "&4"
+                                        if {player.economy.mainmoney::%player%} = 0:
+                                            set {player.economy.mainmoney.color::%player%} to "&7"
+                                        if {player.economy.mainmoney::%player%} <= 49:
+                                            set {player.economy.mainmoney.color::%player%} to "&c"
+                                        if {player.economy.mainmoney::%player%} >= 50: 
+                                            set {player.economy.mainmoney.color::%player%} to "&c"
+                                        if {player.economy.mainmoney::%player%} >= 100:
+                                            set {player.economy.mainmoney.color::%player%} to "&6"
+                                        if {player.economy.mainmoney::%player%} >= 500:
+                                            set {player.economy.mainmoney.color::%player%} to "&e"
+                                        if {player.economy.mainmoney::%player%} >= 1000: 
+                                            set {player.economy.mainmoney.color::%player%} to "&2"
+                                        if {player.economy.mainmoney::%player%} >= 10000: 
+                                            set {player.economy.mainmoney.color::%player%} to "&a"
+                                        if {player.economy.mainmoney::%player%} >= 50000: 
+                                            set {player.economy.mainmoney.color::%player%} to "&a&l"
+                                        send "&cSystem &7>> &fhrac &7%player's displayname% &fti podvodem pridal &a%arg-4% grosu&f. &fMomentalni zustatek: %{player.economy.mainmoney.color::%arg-3%}%%{player.economy.mainmoney::%arg-3%}% grosu" to arg-3
+                                        stop
+                    if arg-2 is "remove" or "odebrat":
+                        if arg-3 is set: 
+                            if arg-3 is set:
+                                if arg-4 is set:
+                                    if arg-4 is number:
+                                        remove arg-4 from {player.economy.mainmoney::%arg-3%}
+                                        send "&cSystem &7>> &fUspesne si podvodem odebral &a%arg-4% grosu&f hraci &7%arg-3's displayname%&f." to player
+                                        if {player.economy.mainmoney::%player%} < 0:
+                                            set {player.economy.mainmoney.color::%player%} to "&4"
+                                        if {player.economy.mainmoney::%player%} = 0:
+                                            set {player.economy.mainmoney.color::%player%} to "&7"
+                                        if {player.economy.mainmoney::%player%} <= 49:
+                                            set {player.economy.mainmoney.color::%player%} to "&c"
+                                        if {player.economy.mainmoney::%player%} >= 50: 
+                                            set {player.economy.mainmoney.color::%player%} to "&c"
+                                        if {player.economy.mainmoney::%player%} >= 100:
+                                            set {player.economy.mainmoney.color::%player%} to "&6"
+                                        if {player.economy.mainmoney::%player%} >= 500:
+                                            set {player.economy.mainmoney.color::%player%} to "&e"
+                                        if {player.economy.mainmoney::%player%} >= 1000: 
+                                            set {player.economy.mainmoney.color::%player%} to "&2"
+                                        if {player.economy.mainmoney::%player%} >= 10000: 
+                                            set {player.economy.mainmoney.color::%player%} to "&a"
+                                        if {player.economy.mainmoney::%player%} >= 50000: 
+                                            set {player.economy.mainmoney.color::%player%} to "&a&l"
+                                        send "&cSystem &7>> &fhrac &7%player's displayname% &fti podvodem odebral &a%arg-4% grosu&f. &fMomentalni zustatek: %{player.economy.mainmoney.color::%arg-3%}%%{player.economy.mainmoney::%arg-3%}% grosu" to arg-3
+                                        stop
+                    if arg-2 is "clear" or "vymazat":
+                        if arg-3 is set: 
+                            if arg-3 is set:
+                                if arg-4 isn't set:
+                                    set {player.economy.mainmoney::%arg-3%} to 0
+                                    stop
+#scoreboard
+every second:
+    loop all players:
+        wipe loop-player's sidebar
+        set name of sidebar of loop-player to "&fStatistiky"
+        set score "&fJmeno: &c%loop-player's name%" in sidebar of loop-player to 8
+        set score "" in sidebar of loop-player to 7
+        set score "&fPostaveni: &a%{player.class.curretclass::%loop-players%}%" in sidebar of loop-player to 6
+        set score "&f" in sidebar of loop-player to 5
+        set score "&fZdravi: &c%loop-player's health%" in sidebar of loop-player to 4
+        set score "&fNasycenost: &6%loop-player's hunger%" in sidebar of loop-player to 3
+        set score "&fMoralka: &3%{game.mechanic.player.happy::%loop-players%}%" in sidebar of loop-player to 2
+        set score "&fUnava: &9%{game.mechanic.player.sleepy::%loop-players%}%" in sidebar of loop-player to 1
+
+on every 10 minutes:
+    set {game.mechanic.player.happycooldown::*} to false
+

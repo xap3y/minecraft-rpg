@@ -1,0 +1,167 @@
+#Codes: 
+#
+
+#Important: /RPG is main command used on every RPG function
+Variables:
+    {game.mechanic.player.freeze::%player%} = false
+    {game.mechanic.helpvariable.chest.duffucultty.time.runout.easy::*::*} = 0
+    
+
+on load:
+    set {chestsloaded} to "&aloaded"
+    set {game.mechanic.lockpick.time.by.difficulty.easy} to "&aaz 30 sekund"
+    set {game.mechanic.lockpick.time.by.difficulty.medium} to "&2az 1 minutu"
+    set {game.mechanic.lockpick.time.by.difficulty.hard} to "&6az 2 minuty"
+    set {game.mechanic.lockpick.time.by.difficulty.extreme} to "&caz 3 minuty"
+
+
+on place of a chest:
+    if name of event-block is "&fTruhla &7(&5%player%&7)":
+        set {game.mechanic.difficulty.lockpick::%name of block%::%location of block%} to "&aEasy"
+        set {game.mechanic.chest.placed.info::%name of block%::%location of block%} to event-block
+        set {game.mechanic.chest.owened.by::%name of block%::%location of block%} to player's name
+        set {game.mechanic.player.chestopening::%player%::%location of block%} to false
+        log "%player% placed chest with name: %name of block% of location: %location of block% of difficulty: %{game.mechanic.difficulty.lockpick::%name of block%::%location of block%}% owned by: %{game.mechanic.chest.owened.by::%name of block%::%location of block%}%" to "/Game/Players/%player%/Chests/Chests-placed"
+    else:
+        stop
+
+on left-click on chest:
+    if name of event-block contains "&fTruhla":
+        player is sneaking: 
+            if player is {game.mechanic.chest.owened.by::%name of block%::%location of block%}:
+                log "%player% destroyed chest with name: %name of block% of location: %location of block% of difficulty: %{game.mechanic.difficulty.lockpick::%name of block%::%location of block%}% owned by: %{game.mechanic.chest.owened.by::%name of block%::%location of block%}%" to "/Game/Players/%player%/Chests/Owned-Chests-removed"
+                stop
+            if player is {game.mechanic.chest.have.access::%name of block%::%location of block%}:
+                log "%player% destroyed foreign chest with name: %name of block% of location: %location of block% of difficulty: %{game.mechanic.difficulty.lockpick::%name of block%::%location of block%}% owned by: %{game.mechanic.chest.owened.by::%name of block%::%location of block%}%" to "/Game/Players/%player%/Chests/Else-Chests-removed"
+                log "%player% destroyed your chest with name: %name of block% of location: %location of block% of difficulty: %{game.mechanic.difficulty.lockpick::%name of block%::%location of block%}% owned by: %{game.mechanic.chest.owened.by::%name of block%::%location of block%}%" to "/Game/Players/%{game.mechanic.chest.owened.by::%name of block%::%location of block%}%/Chests/Owned-Chests-else-removed"
+                stop
+            if player isn't {game.mechanic.chest.owened.by::%name of block%::%location of block%} or {game.mechanic.chest.have.access::%name of block%::%location of block%}:
+                cancel event
+        else:
+            if {game.mechanic.player.chestopening::%player%::%location of block%} is true:
+                set {game.mechanic.helpvariable.chest.difficultty.time.runout.easy::%name of block%::%location of block%} to 0
+                set {game.mechanic.player.chestopening::%player%::%location of block%} to false
+                reset title of player
+                play "ENTITY_BAT_HURT" to player at volume 3
+                send title "&cNepovedlo se!" to player for 3 second
+                set {game.mechanic.player.freeze::%player%} to false
+                send "&cSystem &7>> &fPrestal si otvirat truhlu!"
+                cancel event
+                stop 
+            if {game.mechanic.player.chestopening::%player%::%location of block%} isn't true:
+                send "&cSystem &7>> &fOwned by &c%{game.mechanic.chest.owened.by::%name of block%::%location of block%}%"
+                cancel event
+
+
+on right-click on chest:
+    player is sneaking:
+        cancel event
+        loop all players:
+            if {game.mechanic.player.chestopening::%loop-players%::%location of block%} is true:
+                send "&cSystem &7>> &cNekdo jiz otvira truhlu!"
+                stop
+        if {game.mechanic.player.chestopening::%players%::%location of block%} is true:
+            send "&cSystem &7>> &fJiz jednu truhlu otviras, pokud chces zrusit otvirani, klikni &a&lRMB&f."
+            stop
+        if {game.mechanic.player.chestopening::%players%::%location of block%} isn't true:
+            if player has Tripwire Hook named "&cPaklic" with lore "%nl%&fNelegalni univerzalni klic, ktery %nl%&fdokaze vylamovat zamky jinych truhel. %nl%%nl%&fStatus: &cNelegalni":
+                if {game.mechanic.chest.have.access::%name of block%::%location of block%} or {game.mechanic.chest.owened.by::%name of block%::%location of block%} is player's name:
+                    send "&cSystem &7>> &fJiz mas pristup do teto truhly."
+                    stop
+                if {game.mechanic.chest.have.access::%name of block%::%location of block%} or {game.mechanic.chest.owened.by::%name of block%::%location of block%} isn't player's name:
+
+            #EASY
+
+                    if {game.mechanic.difficulty.lockpick::%name of block%::%location of block%} is "&aEasy":
+                        set {game.mechanic.player.chestopening::%player%::%location of block%} to true
+                        set {game.mechanic.player.freeze::%player%} to true
+                        if {game.mechanic.player.chestopening::%player%::%location of block%} is true:
+                            send "&cSystem &7>> &c&lPozor!!! &fNyni zkousis vylomit zamek u teto truhly, ktery vlastni: &c%{game.mechanic.chest.owened.by::%name of block%::%location of block%}%. &fObtiznost: %{game.mechanic.difficulty.lockpick::%name of block%::%location of block%}%"
+                            send title "&cPokousis se otevrit truhlu &7(%{game.mechanic.difficulty.lockpick::%name of block%::%location of block%}%&7)" with subtitle "&fOdhadovany cas: &f%{game.mechanic.lockpick.time.by.difficulty.easy}%" to player for 5 seconds
+                            set {game.mechanic.helpvariable.chest.difficulty.time.easy::%name of block%::%location of block%} to a random integer between 20 and 35
+                            set {game.mechanic.helpvariable.chest.difficultty.time.runout.easy::%name of block%::%location of block%} to {game.mechanic.helpvariable.chest.difficulty.time.easy::%name of block%::%location of block%}
+                            animace1(event-block, player)
+                            Loop {game.mechanic.helpvariable.chest.difficulty.time.easy::%name of block%::%location of block%} times:
+                                if {game.mechanic.player.chestopening::%player%::%location of block%} is false:
+                                    stop
+                                wait 1 second
+                                remove 1 from {game.mechanic.helpvariable.chest.difficultty.time.runout.easy::%name of block%::%location of block%}
+                            chance of 80%:
+                                play "ENTITY_PLAYER_LEVELUP" to player at volume 3
+                                reset title of player
+                                send title "&aUspesne otevreno" to player for 1 second
+                                chance of 10%:
+                                    remove 1 tripwire hook named "&cPaklic" with lore "%nl%&fNelegalni univerzalni klic, ktery %nl%&fdokaze vylamovat zamky jinych truhel. %nl%%nl%&fStatus: &cNelegalni" from player's inventory
+                                    give 1 tripwire hook named "&cZlomeny Paklic" with lore "%nl%&fZlomeny paklic ti uz nijak neposlouzi, muzes ho zahodit. %nl%%nl%&fStatus: &cNelegalni" to player's inventory
+                                    send "&cSystem &7>> &ePri vylamovani zamku se &cPaklic&e zlomil a je k zahozeni."
+                                set {game.mechanic.chest.have.access::%name of block%::%location of block%} to player's name 
+                                set {game.mechanic.player.freeze::%player%} to false
+                                set {game.mechanic.player.chestopening::%player%::%location of block%} to false
+                                stop
+                            else:
+                                play "ENTITY_BAT_HURT" to player at volume 3
+                                send title "&cNepovedlo se!" to player for 3 second
+                                chance of 40%:
+                                    remove 1 tripwire hook named "&cPaklic" with lore "%nl%&fNelegalni univerzalni klic, ktery %nl%&fdokaze vylamovat zamky jinych truhel. %nl%%nl%&fStatus: &cNelegalni" from player's inventory
+                                    give 1 tripwire hook named "&cZlomeny Paklic" with lore "%nl%&fZlomeny paklic ti uz nijak neposlouzi, muzes ho zahodit. %nl%%nl%&fStatus: &cNelegalni" to player's inventory
+                                    send "&cSystem &7>> &ePri vylamovani zamku se &cPaklic&e zlomil a je k zahozeni."
+                                set {game.mechanic.player.freeze::%player%} to false
+                                set {game.mechanic.player.chestopening::%player%::%location of block%} to false
+                                stop
+
+                    #MEDIUM
+                    
+            if player doesn't have Tripwire Hook named "&cPaklic" with lore "%nl%&fNelegalni univerzalni klic, ktery %nl%&fdokaze vylamovat zamky jinych truhel. %nl%%nl%&fStatus: &cNelegalni":
+                send "&cSystem &7>> &fNemas &cPaklic&f, nemas cim vylomit zamek!" 
+                stop
+                if {game.mechanic.difficulty.lockpick::%name of block%::%location of block%} is "&6Medium":
+                    stop
+
+    player isn't sneaking:
+        if {game.mechanic.chest.owened.by::%name of block%::%location of block%} and {game.mechanic.chest.have.access::%name of block%::%location of block%} is not player's name:
+            send "&cSystem &7>> &c&lPozor!!! &fToto neni tvoje truhla a nemas od ni klic. Muzes ji zkusit otevrit pomoci drzeni &a&lShift+RMB &fa &cpaklice&f, ale pozor, tato cinnost je &cnelegalni!"
+            cancel event
+        if {game.mechanic.chest.owened.by::%name of block%::%location of block%} and {game.mechanic.chest.have.access::%name of block%::%location of block%} is player's name:
+            stop
+
+on inventory open:
+    if {game.mechanic.player.freeze::%player%} is true:
+        cancel event
+    if {game.mechanic.player.freeze::%player%} is false:
+        stop
+
+on player move:
+    if {game.mechanic.player.freeze::%player%} is true:
+        cancel event
+    if {game.mechanic.player.freeze::%player%} is false:
+        stop
+
+command /unfreeze <player>:
+    trigger:
+        set {game.mechanic.player.freeze::%arg-1%} to false
+
+
+
+function animace1(blockname: block, p: player):
+    wait 5 seconds
+    while {game.mechanic.helpvariable.chest.difficultty.time.runout.easy::%name of {_blockname}%::%location of {_blockname}%} isn't 0:
+        send title "&cOteviras..." with subtitle "&a||&c||||||||" to {_p} for 1 second
+        wait 1 second
+        if {game.mechanic.helpvariable.chest.difficultty.time.runout.easy::%name of {_blockname}%::%location of {_blockname}%} is 0:
+            stop
+        send title "&cOteviras..." with subtitle "&a||||&c||||||" to {_p} for 1 second
+        wait 1 second
+        if {game.mechanic.helpvariable.chest.difficultty.time.runout.easy::%name of {_blockname}%::%location of {_blockname}%} is 0:
+            stop
+        send title "&cOteviras..." with subtitle "&a||||||&c||||" to {_p} for 1 second
+        wait 1 second
+        if {game.mechanic.helpvariable.chest.difficultty.time.runout.easy::%name of {_blockname}%::%location of {_blockname}%} is 0:
+            stop
+        send title "&cOteviras..." with subtitle "&a||||||||&c||" to {_p} for 1 second
+        wait 1 second
+        if {game.mechanic.helpvariable.chest.difficultty.time.runout.easy::%name of {_blockname}%::%location of {_blockname}%} is 0:
+            stop
+        send title "&cOteviras..." with subtitle "&a||||||||||" to {_p} for 1 second
+        wait 1 second
+        if {game.mechanic.helpvariable.chest.difficultty.time.runout.easy::%name of {_blockname}%::%location of {_blockname}%} is 0:
+            stop

@@ -1,0 +1,13 @@
+#Codes: 
+#
+
+#Important: /RPG is main command used on every RPG function
+
+Variables:
+
+
+on load:
+    set {Castlesloaded} to "&aloaded"
+
+
+#main command /rpg (Core.sk)
