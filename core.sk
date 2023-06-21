@@ -1,7 +1,6 @@
 #Codes: 
 #Set {player.firstjoinstatus::%player%} to false (Set first player join) = FJSCT01
 
-# cau vidis to?
 
 Variables:
     {player.firstjoinstatus::%player%} = false
