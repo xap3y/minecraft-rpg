@@ -13,7 +13,7 @@ Variables:
     {game.mechanic.player.happycooldown::%player%} = true
 
 options:
-    prefix: &bSystem
+    prefix: &cSystem
 
 on load:
     set {Coreloaded} to "&aloaded"
