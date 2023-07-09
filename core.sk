@@ -240,8 +240,8 @@ on damage:
     if victim is player:
         stop
     if victim is animal:
-        
-        stop
+        if victim's health - victim's health/100*20: 
+            stop
 
 command /rpg [<text>] [<text>]:
     trigger:
