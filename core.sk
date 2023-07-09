@@ -234,6 +234,10 @@ on death:
         else:
             stop
 
+#Combat system
+
+on player hit:
+
 command /rpg [<text>] [<text>]:
     trigger:
         if arg-1 is set:
