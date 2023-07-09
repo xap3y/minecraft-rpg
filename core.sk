@@ -236,7 +236,7 @@ on death:
 
 #Combat system
 
-on player hit:
+on player hitas
 
     cancel event
 
