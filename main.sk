@@ -38,6 +38,9 @@ function EnterWalkMode(p: player):
         set {stamina::players::%{_p}%::oldloc} to location of {_p}  # nastavi zacatecni lokaci hrace
         wait 1 tick
         while {stamina::players::%{_p}%::oldloc} is not location of {_p}: # Zkontroluje zda hrac chodi (zda se mu meni lokace)
+            if player is sprinting:
+                set {stamina::players::%{_p}%::ismoving} to false
+                stop
             set {stamina::players::%{_p}%::oldloc} to location of {_p}
             if {stamina::players::%{_p}%::ismoving} is false: # Pokud hrac zacal sprintovat tak se loop znici
                 stop
