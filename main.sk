@@ -40,7 +40,7 @@ function EnterWalkMode(p: player):
         while {stamina::players::%{_p}%::oldloc} is not location of {_p}: # Zkontroluje zda hrac chodi (zda se mu meni lokace)
             set {stamina::players::%{_p}%::oldloc} to location of {_p}
             if {stamina::players::%{_p}%::ismoving} is false: # Pokud hrac zacal sprintovat tak se loop znici
-                break
+                stop
 
             if {stamina::players::%{_p}%::bufferwalk} >= 20:  # Zkontrouje jestli hrac sel celou sekundu v kuse
                 add 1 to {stamina::players::%{_p}%::walktime}   # Prida 1 sekundu do celkoveho casu chozeni
