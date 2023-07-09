@@ -236,9 +236,11 @@ on death:
 
 #Combat system
 
-on player hitas
-
-    cancel event
+on damage:
+    if target is player:
+        stop
+    if target is animal or monster:
+        stop
 
 command /rpg [<text>] [<text>]:
     trigger:
