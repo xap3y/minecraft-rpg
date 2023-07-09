@@ -31,7 +31,6 @@ function checkMoving(p: player):
 
         if {_p} is sprinting:
             if {stamina::players::%{_p}%::buffer} >= 20:
-                broadcast "%{_p}% +1 sprinttime"
                 add 1 to {stamina::players::%{_p}%::sprinttime}
                 set {stamina::players::%{_p}%::buffer} to 0
             else:
@@ -43,7 +42,7 @@ function checkMoving(p: player):
             else:
                 add 1 to {stamina::players::%{_p}%::bufferwalk}
 
-        wait tick
+        wait tick #s
         if {stamina::players::%{_p}%::oldloc} is not location of {_p}:
             set {stamina::players::%{_p}%::ismoving} to true
         else:
