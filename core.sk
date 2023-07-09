@@ -236,7 +236,7 @@ on death:
 
 #Combat system
 
-on player damage:
+on damage:
     if target is player:
         stop
     if target is animal or monster:
