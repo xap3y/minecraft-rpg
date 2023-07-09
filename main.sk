@@ -18,5 +18,5 @@ function EnterSprintLoop(p: player):
             set {stamina::players::%{_p}%::buffer} to 0
         else:
             add 1 to {stamina::players::%{_p}%::buffer}
-            wait 5 ticks # 0,2 sekundy
-    
+        wait 5 ticks
+    broadcast "hrac %{_p}% bezel presne %{stamina::players::%{_p}%::sprinttime}%.%({stamina::players::%{_p}%::buffer} * 2)%s'"
