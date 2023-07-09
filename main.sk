@@ -52,6 +52,7 @@ function EnterWalkMode(p: player):
                 add 1 to {stamina::players::%{_p}%::bufferwalk}
                 broadcast "%{_p}% +1 >> bufferwalk (%{stamina::players::%{_p}%::bufferwalk}%)"
             wait 1 tick
+        set {stamina::players::%{_p}%::ismoving} to false
     else:
         broadcast "%{_p}% ismoving=true | break"
 
