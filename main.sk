@@ -52,7 +52,7 @@ function checkMoving(p: player):
 
 every 10 seconds:
     loop all players:
-        broadcast "[10s] &e%loop-player% &fbezel &b%{stamina::players::%loop-player%::sprinttime}% &fsekund a pesky sel &b%{stamina::players::%loop-player%::walktime}% &fsekund"
+        #broadcast "[10s] &e%loop-player% &fbezel &b%{stamina::players::%loop-player%::sprinttime}% &fsekund a pesky sel &b%{stamina::players::%loop-player%::walktime}% &fsekund"
         set {stamina::players::%loop-player%::walktime} to 0
         set {stamina::players::%loop-player%::sprinttime} to 0
 
