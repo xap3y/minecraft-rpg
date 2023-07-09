@@ -55,6 +55,8 @@ function EnterWalkMode(p: player):
                 wait 1 tick
         set {stamina::players::%{_p}%::ismoving} to false
         broadcast "%{_p}% end of loop EnterWalkMode"
+        while {_p} is walking:
+            wait 5 ticks
 
 # Every x times:
 
