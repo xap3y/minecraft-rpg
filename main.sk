@@ -48,7 +48,7 @@ function EnterWalkMode(p: player):
             else:
                 add 1 to {stamina::players::%{_p}%::bufferwalk}
             wait 1 tick
-
+adsget
 
 # Every x times:
 
