@@ -26,11 +26,13 @@ function EnterSprintLoop(p: player):
 
     while {_p} is sprinting:
         if {stamina::players::%{_p}%::buffer} >= 20:
+            broadcast "%{_p}% +1 sprinttime"
             add 1 to {stamina::players::%{_p}%::sprinttime}
             set {stamina::players::%{_p}%::buffer} to 0
         else:
             add 1 to {stamina::players::%{_p}%::buffer}
-        wait 1 ticks
+        wait 1 tick
+        broadcast "%{_p}% end of loop EnterSprintLoop"
 
 function EnterWalkMode(p: player):
     if {stamina::players::%{_p}%::ismoving} is not true:  # Zkontroluje zda jiz funkce nebezi
@@ -44,14 +46,15 @@ function EnterWalkMode(p: player):
             set {stamina::players::%{_p}%::oldloc} to location of {_p}
             if {stamina::players::%{_p}%::ismoving} is false: # Pokud hrac zacal sprintovat tak se loop znici
                 stop
-
-            if {stamina::players::%{_p}%::bufferwalk} >= 20:  # Zkontrouje jestli hrac sel celou sekundu v kuse
-                add 1 to {stamina::players::%{_p}%::walktime}   # Prida 1 sekundu do celkoveho casu chozeni
-                set {stamina::players::%{_p}%::bufferwalk} to 0 # reseture buffer
             else:
-                add 1 to {stamina::players::%{_p}%::bufferwalk}
-            wait 1 tick
+                if {stamina::players::%{_p}%::bufferwalk} >= 20:  # Zkontrouje jestli hrac sel celou sekundu v kuse
+                    add 1 to {stamina::players::%{_p}%::walktime}   # Prida 1 sekundu do celkoveho casu chozeni
+                    set {stamina::players::%{_p}%::bufferwalk} to 0 # reseture buffer
+                else:
+                    add 1 to {stamina::players::%{_p}%::bufferwalk}
+                wait 1 tick
         set {stamina::players::%{_p}%::ismoving} to false
+        broadcast "%{_p}% end of loop EnterWalkMode"
 
 # Every x times:
 
