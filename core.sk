@@ -236,9 +236,7 @@ on death:
 
 #Combat system
 
-on player hitasda
-
-    cancel event
+on player hit:
 
 command /rpg [<text>] [<text>]:
     trigger:
