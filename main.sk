@@ -4,7 +4,7 @@
 
 # Stamina system:
 
-# Events
+# Events >>
 
 on player sprint toggle:
     EnterSprintLoop(player)
@@ -18,7 +18,7 @@ on join:
     if {stamina::players::%player%::sprinttime} is not set:
         set {stamina::players::%player%::sprinttime} to 0
 
-# Functions
+# Functions >>
 
 function EnterSprintLoop(p: player):
     if {stamina::players::%{_p}%::ismoving} is true:
