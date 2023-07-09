@@ -19,3 +19,4 @@ function EnterSprintLoop(p: player):
         else:
             add 1 to {stamina::players::%{_p}%::buffer}
             wait 5 ticks # 0,2 sekundy
+    
