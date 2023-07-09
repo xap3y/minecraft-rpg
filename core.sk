@@ -11,6 +11,7 @@ Variables:
     {game.mechanic.player.happy::%player%} = 100
     {game.mechanic.player.sleepy::%player%} = 0
     {game.mechanic.player.happycooldown::%player%} = true
+    {game.mechanic.entity.isbleeding::*} = false
 
 options:
     prefix: &cSystem &7>>
@@ -218,6 +219,9 @@ on right-click:
     stop
 
 on death:
+    if victim is a animal:
+        set {game.mechanic.entity.isbleeding::%victim%} to false
+        stop
     if attacker is a player:
         log "Death: %attacker% killed %victim%" to "/Game/Players/%victim%/Deaths"
     else if victim is a player:
@@ -236,12 +240,40 @@ on death:
 
 #Combat system
 
-on damage of player:
-    if victim is player:
+on damage of entity:
+    if victim is a player:
         stop
-    if victim is animal:
-        if victim's health - victim's health/100*20: 
+    if victim is a animal:
+        if attacker's tool is hand:
             stop
+        if name of attacker's tool cointains "Sword", "Axe", "Hoe", "Shovel", "Pickaxe", "Bow", "Arrow", "Rod", "Trident", "Torch", "Shard", "Lever", "Crossbow" or "Stick":
+            if attacker is not a player:
+                stop
+            if victim's health is more than 0:
+                chance of 5%:
+                    if {game.mechanic.entity.isbleeding::%victim%} is true:
+                        send "&cKriticky zasah, obet nyni krvaci jeste vic." to attacker
+                        bleeding2(victim)
+                        stop
+                    set {game.mechanic.entity.isbleeding::%victim%} to true
+                    send "&cKriticky zasah, obet nyni krvaci." to attacker
+                    bleeding1(victim)
+            if victim's health is less than 5:
+                chance of 5%:
+                    set {game.mechanic.entity.isbleeding::%victim%} to true
+                    bleeding1(victim)
+                    send "&cKriticky zasah, obet nyni krvaci." to attacker
+
+
+function bleeding2(p: entity):
+    while {_p}'s health is more than 0:
+        make {_p} damage {_p} by 2
+        wait 60 ticks 
+
+function bleeding1(p: entity):
+    while {_p}'s health is more than 0:
+        make {_p} damage {_p} by 1
+        wait 90 ticks 
 
 command /rpg [<text>] [<text>]:
     trigger:
