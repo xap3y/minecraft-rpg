@@ -237,9 +237,10 @@ on death:
 #Combat system
 
 on damage:
-    if target is player:
+    if victim is player:
         stop
-    if target is animal or monster:
+    if victim is animal:
+        
         stop
 
 command /rpg [<text>] [<text>]:
