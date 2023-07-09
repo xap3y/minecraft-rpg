@@ -236,7 +236,7 @@ on death:
 
 #Combat system
 
-on player hitas
+on player hitasda
 
 command /rpg [<text>] [<text>]:
     trigger:
