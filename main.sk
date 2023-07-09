@@ -1,1 +1,21 @@
-#tady neco bude omg
+
+
+
+
+## Stamina:
+
+# Events
+
+on player sprint toggle:
+    EnterSprintLoop(player)
+
+# Functions
+
+function EnterSprintLoop(p: player):
+    while {_p} is sprinting:
+        if {stamina::players::%{_p}%::buffer} => 5:
+            add 1 to {stamina::players::%{_p}%::sprinttime}
+            set {stamina::players::%{_p}%::buffer} to 0
+        else:
+            add 1 to {stamina::players::%{_p}%::buffer}
+            wait 5 ticks # 0,2 sekundy
