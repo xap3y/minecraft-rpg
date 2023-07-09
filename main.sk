@@ -33,28 +33,22 @@ function EnterSprintLoop(p: player):
         wait 1 ticks
 
 function EnterWalkMode(p: player):
-    broadcast "%{_p}% call EnterWalkMode()"
     if {stamina::players::%{_p}%::ismoving} is not true:  # Zkontroluje zda jiz funkce nebezi
         set {stamina::players::%{_p}%::ismoving} to true
         set {stamina::players::%{_p}%::oldloc} to location of {_p}  # nastavi zacatecni lokaci hrace
         wait 1 tick
         while {stamina::players::%{_p}%::oldloc} is not location of {_p}: # Zkontroluje zda hrac chodi (zda se mu meni lokace)
-            broadcast "%{_p}% old!=new"
             set {stamina::players::%{_p}%::oldloc} to location of {_p}
             if {stamina::players::%{_p}%::ismoving} is false: # Pokud hrac zacal sprintovat tak se loop znici
                 stop
 
             if {stamina::players::%{_p}%::bufferwalk} >= 20:  # Zkontrouje jestli hrac sel celou sekundu v kuse
                 add 1 to {stamina::players::%{_p}%::walktime}   # Prida 1 sekundu do celkoveho casu chozeni
-                broadcast "%{_p}% +1 >> walktime (%{stamina::players::%{_p}%::walktime}%)"
                 set {stamina::players::%{_p}%::bufferwalk} to 0 # reseture buffer
             else:
                 add 1 to {stamina::players::%{_p}%::bufferwalk}
-                broadcast "%{_p}% +1 >> bufferwalk (%{stamina::players::%{_p}%::bufferwalk}%)"
             wait 1 tick
         set {stamina::players::%{_p}%::ismoving} to false
-    else:
-        broadcast "%{_p}% ismoving=true | break"
 
 # Every x times:
 
