@@ -58,4 +58,4 @@ every 10 seconds:
         set {stamina::players::%loop-player%::walktime} to 0
         set {stamina::players::%loop-player%::sprinttime} to 0
 
-        #
+        #w
