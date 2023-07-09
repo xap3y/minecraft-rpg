@@ -238,6 +238,8 @@ on death:
 
 on player hit:
 
+    cancel event
+
 command /rpg [<text>] [<text>]:
     trigger:
         if arg-1 is set:
