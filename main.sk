@@ -9,14 +9,51 @@
 on player sprint toggle:
     EnterSprintLoop(player)
 
+on player move:
+    EnterWalkMode(player)
+
+on join:
+    if {stamina::players::%player%::buffer} is not set:
+        set {stamina::players::%player%::buffer} to 0
+    if {stamina::players::%player%::sprinttime} is not set:
+        set {stamina::players::%player%::sprinttime} to 0
+
 # Functions
 
 function EnterSprintLoop(p: player):
+    if {stamina::players::%{_p}%::ismoving} is true:
+        set {stamina::players::%{_p}%::ismoving} to false
+
     while {_p} is sprinting:
-        if {stamina::players::%{_p}%::buffer} >= 5:
+        if {stamina::players::%{_p}%::buffer} >= 20:
             add 1 to {stamina::players::%{_p}%::sprinttime}
             set {stamina::players::%{_p}%::buffer} to 0
         else:
             add 1 to {stamina::players::%{_p}%::buffer}
-        wait 5 ticks
-    broadcast "hrac %{_p}% bezel presne %{stamina::players::%{_p}%::sprinttime}%.%({stamina::players::%{_p}%::buffer} * 2)%s'"
+        wait 1 ticks
+
+function EnterWalkMode(p: player):
+    if {stamina::players::%{_p}%::ismoving} is not true:  # Zkontroluje zda jiz funkce nebezi
+        set {stamina::players::%{_p}%::ismoving} to true
+        set {stamina::players::%{_p}%::oldloc} to location of {_p}  # nastavi zacatecni lokaci hrace
+        wait 1 tick
+        while {stamina::players::%{_p}%::oldloc} is not location of {_p}: # Zkontroluje zda hrac chodi (zda se mu meni lokace)
+            set {stamina::players::%{_p}%::oldloc} to location of {_p}
+            if {stamina::players::%{_p}%::ismoving} is false: # Pokud hrac zacal sprintovat tak se loop znici
+                break
+
+            if {stamina::players::%{_p}%::bufferwalk} >= 20:  # Zkontrouje jestli hrac sel celou sekundu v kuse
+                add 1 to {stamina::players::%{_p}%::walktime}   # Prida 1 sekundu do celkoveho casu chozeni
+                set {stamina::players::%{_p}%::bufferwalk} to 0 # reseture buffer
+            else:
+                add 1 to {stamina::players::%{_p}%::bufferwalk}
+            wait 1 tick
+
+
+# Every x times:
+
+every 10 seconds:
+    loop all players:
+        broadcast "[10s] &e%loop-player% &fbezel &b%{stamina::players::%loop-player%::sprinttime}% &fsekund a pesky sel &b%{stamina::players::%loop-player%::walktime}% &fsekund"
+        set {stamina::players::%loop-player%::walktime} to 0
+        set {stamina::players::%loop-player%::sprinttime} to 0
