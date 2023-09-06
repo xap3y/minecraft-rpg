@@ -412,6 +412,9 @@ on every 10 minutes:
 
 command /srl [<text>]:
     trigger:
-        make executor execute "/skript reload ./minecraft-rpg/%arg-1%"
-
-        # xd
+        if player doesn't have permission "server.admin" or "server.srl":
+            send "&cServer &7>> &cYou don't have enought permission to run this command!" to player
+            cancel event
+        if player have permission "server.admin" or "server.srl":
+            make executor execute "/skript reload ./minecraft-rpg/%arg-1%"
+            send "&cSystem &7>> &eSystem reloaded!" to player
