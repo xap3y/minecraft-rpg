@@ -136,6 +136,13 @@ on player move:
     if {game.mechanic.player.freeze::%player%} is false:
         stop
 
+on player left:
+    if {game.mechanic.player.freeze::%player%} is true:
+        set {game.mechanic.player.freeze::%player%} to false
+        stop
+    if {game.mechanic.player.freeze::%player%} is false:
+        stop
+
 command /unfreeze <player>:
     trigger:
         set {game.mechanic.player.freeze::%arg-1%} to false
