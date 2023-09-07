@@ -417,4 +417,4 @@ command /srl [<text>]:
             cancel event
         if player have permission "server.admin" or "server.srl":
             make executor execute "/skript reload ./minecraft-rpg/%arg-1%"
-            send "&cSystem &7>> &eSystem reloaded!" to player
+            send "&cSystem &7>> &aSystem reloaded!" to player
