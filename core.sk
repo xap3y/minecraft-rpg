@@ -418,3 +418,4 @@ command /srl [<text>]:
         if player have permission "server.admin" or "server.srl":
             make executor execute "/skript reload ./minecraft-rpg/%arg-1%"
             send "&cSystem &7>> &aSystem reloaded!" to player
+            set pdlayer to agama
